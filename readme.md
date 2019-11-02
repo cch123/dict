@@ -9,3 +9,4 @@ Crawl personal news from various tech sites
 - [ ] crawl news from hackernews
 - [ ] crawl news from github 
 - [ ] support for personal configure
+- [ ] timeout
