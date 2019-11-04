@@ -8,10 +8,8 @@ mod reddit;
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     github::crawl().await?;
-    reddit::crawl();
-    println!("github done");
-
     hackernews::crawl().await?;
+    reddit::crawl().await?;
 
     Ok(())
 }
