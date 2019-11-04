@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 /// Get reddit news for subscribed channels
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -32,7 +34,10 @@ struct BlockDetail {
 // www.reddit.com/r/rust.json
 // www.reddit.com/r/golang.json
 pub(crate) async fn crawl() -> Result<(), Box<dyn std::error::Error>> {
-    let client = reqwest::Client::builder().use_sys_proxy().build()?;
+    let client = reqwest::Client::builder()
+        .use_sys_proxy()
+        .timeout(Duration::from_secs(5))
+        .build()?;
 
     let body = client
         .get("https://www.reddit.com/r/rust.json")

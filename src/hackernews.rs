@@ -1,4 +1,5 @@
 use reqwest;
+use std::time::Duration;
 //use serde_json::Value;
 
 //use serde::{Deserialize, Serialize};
@@ -32,7 +33,11 @@ struct Story {
 // https://github.com/HackerNews/API
 pub(crate) async fn crawl() -> Result<(), Box<dyn std::error::Error>> {
     // before hacker news there is gfw
-    let client = reqwest::Client::builder().use_sys_proxy().build()?;
+    let client = reqwest::Client::builder()
+        .use_sys_proxy()
+        .timeout(Duration::from_secs(5))
+        .build()?;
+
     let json = client
         .get("https://hacker-news.firebaseio.com/v0/topstories.json")
         .send()

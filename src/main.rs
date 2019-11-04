@@ -7,9 +7,11 @@ mod reddit;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // TODO, crawl every site concurrently
+
     github::crawl().await?;
-    hackernews::crawl().await?;
     reddit::crawl().await?;
+    hackernews::crawl().await?;
 
     Ok(())
 }

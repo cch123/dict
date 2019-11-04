@@ -2,11 +2,16 @@
 /// support configure for interested languages
 use reqwest;
 use serde_json::Value;
+use std::time::Duration;
 
 // https://developer.github.com/v3/
 // curl -G https://api.github.com/search/repositories --data-urlencode "sort=stars" --data-urlencode "order=desc" --data-urlencode "q=language:java"  --data-urlencode "q=created:>`date -v-7d '+%Y-%m-%d'`"
 pub(crate) async fn crawl() -> Result<(), Box<dyn std::error::Error>> {
-    let client = reqwest::Client::builder().use_sys_proxy().build()?;
+    let client = reqwest::Client::builder()
+        .use_sys_proxy()
+        .timeout(Duration::from_secs(5))
+        .build()?;
+
     let params = [
         ("s", "stars"),
         ("o", "desc"),
@@ -28,7 +33,7 @@ pub(crate) async fn crawl() -> Result<(), Box<dyn std::error::Error>> {
     for item in j["items"].as_array().unwrap() {
         // todo, beautiful table
         println!(
-            "item : github.com/{}, {}, ",
+            "github.com/{}, Stars: {}, ",
             item["full_name"].as_str().unwrap(),
             item["stargazers_count"]
         );
