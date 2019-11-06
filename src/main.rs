@@ -10,10 +10,10 @@ mod reddit;
 use future::Future;
 use futures::{future, StreamExt};
 use std::pin::Pin;
-
+use std::error::Error;
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
+async fn main() -> Result<(), Box<dyn Error>> {
     // concurrently crawl all sites
     // 第一种写法
     match future::join3(github::crawl(), reddit::crawl(), hackernews::crawl()).await {
@@ -29,11 +29,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     第二种写法
     let result_list = future::join_all(vec![
         Box::pin(github::crawl())
-            as Pin<Box<dyn Future<Output = Result<(), Box<dyn std::error::Error>>>>>,
+            as Pin<Box<dyn Future<Output = Result<(), Box<dyn Error>>>>>,
         Box::pin(reddit::crawl())
-            as Pin<Box<dyn Future<Output = Result<(), Box<dyn std::error::Error>>>>>,
+            as Pin<Box<dyn Future<Output = Result<(), Box<dyn Error>>>>>,
         Box::pin(hackernews::crawl())
-            as Pin<Box<dyn Future<Output = Result<(), Box<dyn std::error::Error>>>>>,
+            as Pin<Box<dyn Future<Output = Result<(), Box<dyn Error>>>>>,
     ]).await;
 
     result_list.iter().for_each(|result|{
@@ -41,9 +41,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     });
     */
 
+    // 第三种写法
     /*
-    第三种写法
-    match join!(github::crawl(), reddit::crawl(), hackernews::crawl()) {
+    match futures::join!(github::crawl(), reddit::crawl(), hackernews::crawl()) {
         (Ok(_), Ok(_), Ok(_)) => {
             println!("it is fucking ok");
         }
