@@ -33,17 +33,9 @@ pub(crate) async fn crawl() -> Result<(), Box<dyn std::error::Error>> {
     let mut table = Table::new();
     let j: Value = serde_json::from_str(body.as_str())?;
     for item in j["items"].as_array().unwrap() {
-        // todo, beautiful table
-        /*
-        println!(
-            "github.com/{}, Stars: {}, ",
-            item["full_name"].as_str().unwrap(),
-            item["stargazers_count"]
-        );
-        */
         table.add_row(row![
-            format!("github.com/{}", item["full_name"].as_str().unwrap()),
-            "Start",
+            Fr -> format!("github.com/{}", item["full_name"].as_str().unwrap()),
+            Fy -> "Stars",
             item["stargazers_count"]
         ]);
     }

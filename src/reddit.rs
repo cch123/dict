@@ -1,4 +1,5 @@
 use std::time::Duration;
+use prettytable::{Table, Row, Cell};
 
 /// Get reddit news for subscribed channels
 
@@ -46,12 +47,19 @@ pub(crate) async fn crawl() -> Result<(), Box<dyn std::error::Error>> {
         .text()
         .await?;
 
-    let mut block_list = vec![];
     let j: RedditResp = serde_json::from_str(body.as_str())?;
+
+    let mut table = Table::new();
     j.data.children.iter().for_each(|x| {
-        block_list.push(x);
-        println!("{}", x.data.title);
+        table.add_row(row![
+            Fy -> x.data.title,
+        ]);
+        table.add_row(row![
+            format!("reddit.com/{}", x.data.permalink),
+        ]);
     });
+
+    table.printstd();
 
     Ok(())
 }

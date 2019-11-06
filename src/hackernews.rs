@@ -1,5 +1,7 @@
 use reqwest;
 use std::time::Duration;
+use prettytable::{Table, Row, Cell};
+
 //use serde_json::Value;
 
 //use serde::{Deserialize, Serialize};
@@ -67,7 +69,18 @@ pub(crate) async fn crawl() -> Result<(), Box<dyn std::error::Error>> {
     (0..10).for_each(|i|{});
     总之就是编译过不了。
     */
+    let mut table = Table::new();
+    story_list.iter().for_each(|s|{
+        table.add_row(row![
+            Fy -> s.title,
+        ]);
+        table.add_row(row![
+            s.url,// s.by,
+        ]);
+    });
 
-    println!("story list :{:?}", story_list);
+    table.printstd();
+
+    //println!("story list :{:?}", story_list);
     Ok(())
 }
