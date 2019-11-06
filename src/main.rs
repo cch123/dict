@@ -1,7 +1,7 @@
 // use futures::join; 需要在 toml 里开启 feature gate 才能用
 
-#[macro_use]
-extern crate serde_derive;
+#[macro_use] extern crate serde_derive;
+#[macro_use] extern crate prettytable;
 
 mod github; // use github is not legal
 mod hackernews;
