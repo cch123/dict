@@ -12,6 +12,10 @@ use futures::{future, StreamExt};
 use std::pin::Pin;
 use std::error::Error;
 
+fn f2pbf(f : impl Future<Output = Result<(), Box<dyn Error>>> + 'static) -> Pin<Box<dyn Future<Output = Result<(), Box<dyn Error>>>>> {
+    Box::pin(f) as Pin<Box<dyn Future<Output = Result<(), Box<dyn Error>>>>>
+}
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
     // concurrently crawl all sites
@@ -25,8 +29,19 @@ async fn main() -> Result<(), Box<dyn Error>> {
         }
     }
 
+    //第二种写法
     /*
-    第二种写法
+    let result_list = future::join_all(vec![
+        f2pbf(github::crawl()),
+        f2pbf(reddit::crawl()),
+        f2pbf(hackernews::crawl()),
+    ]).await;
+
+    result_list.iter().for_each(|result|{
+        println!("{:?}", result);
+    });
+    */
+    /*
     let result_list = future::join_all(vec![
         Box::pin(github::crawl())
             as Pin<Box<dyn Future<Output = Result<(), Box<dyn Error>>>>>,
